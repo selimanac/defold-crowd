@@ -34,7 +34,7 @@ Defold Crowd is not a complete movement AI system.
 For detailed function descriptions and usage examples:
 
 - [LUA API Reference](./LUA_API.md)
-- [C/C++ API Reference](./Cpp_API.md)
+- [C/C++ API Reference](./CPP_API.md)
 
 
 
