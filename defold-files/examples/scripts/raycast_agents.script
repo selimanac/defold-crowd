@@ -1,0 +1,291 @@
+local data                     = require("defold-files.examples.scripts.lib.data")
+local cam                      = require("defold-files.examples.scripts.lib.cam")
+local const                    = require("defold-files.examples.scripts.lib.const")
+local agent                    = require("defold-files.examples.scripts.lib.agent")
+
+local MAX_AGENTS               = 2500
+local RUN_SIMULATION           = true -- toggle run C/C++ or Lua -> false = lua
+local MAX_WORKERS              = 3
+
+local FORM_RADIUS              = 4400
+local RAY_COUNT                = 50
+local RAY_RESULT_CAP           = 64
+local RAY_RADIUS               = 0
+local HIT_MARKER_CAP           = 4096
+
+local COLOR_AGENT_BASE         = vmath.vector4(1, 1, 1, 1)
+local COLOR_AGENT_HIT          = vmath.vector4(60 / 255, 160 / 255, 255 / 255, 1)
+local COLOR_RAY_MISS           = vmath.vector4(90 / 255, 110 / 255, 135 / 255, 0.32)
+local COLOR_RAY_HIT            = vmath.vector4(255 / 255, 220 / 255, 90 / 255, 0.78)
+local COLOR_FIRST_HIT          = vmath.vector4(255 / 255, 95 / 255, 70 / 255, 1)
+local COLOR_LATER_HIT          = vmath.vector4(255 / 255, 245 / 255, 145 / 255, 1)
+local COLOR_HIDDEN             = vmath.vector4(1, 1, 1, 0)
+
+local step_update              = crowd.do_step
+local rays                     = {}
+local hit_markers              = {}
+local hit_marker_count         = 0
+local visible_hit_marker_count = 0
+local highlighted_agents       = {}
+local next_highlighted_agents  = {}
+local highlighted_count        = 0
+local next_highlight_count     = 0
+
+local function set_tint(sprite_url, color)
+	go.set(sprite_url, "tint", color)
+end
+
+local function set_circle_size(sprite_url, radius)
+	go.set(sprite_url, "size", vmath.vector3(radius * 2, radius * 2, 0))
+end
+
+local function random_range(min_value, max_value)
+	return min_value + rnd.double(const.RND_ID) * (max_value - min_value)
+end
+
+local function random_point_in_radius(radius)
+	local angle = rnd.double(const.RND_ID) * const.TWO_PI
+	local distance = math.sqrt(rnd.double(const.RND_ID)) * radius
+
+	return vmath.vector3(math.cos(angle) * distance, math.sin(angle) * distance, 0)
+end
+
+local function generate_rays()
+	local short_edge_end = math.floor(RAY_COUNT / 3)
+	local long_center_end = math.floor(RAY_COUNT * 2 / 3)
+	local ray_area_radius = FORM_RADIUS * 1.35
+	local short_edge_len = FORM_RADIUS * 0.35
+	local dense_center_extent = FORM_RADIUS * 0.22
+
+	for i = 1, RAY_COUNT do
+		local ray = {
+			hit   = false,
+			count = 0,
+		}
+
+		if i <= short_edge_end then
+			local angle = rnd.double(const.RND_ID) * const.TWO_PI
+			local radial = vmath.vector3(math.cos(angle), math.sin(angle), 0)
+			local tangent = vmath.vector3(-radial.y, radial.x, 0)
+			local center = radial * random_range(FORM_RADIUS * 0.86, FORM_RADIUS * 1.14)
+			local half = tangent * (short_edge_len * 0.5)
+			ray.start_position = center - half
+			ray.end_position = center + half
+		elseif i <= long_center_end then
+			local angle = rnd.double(const.RND_ID) * const.TWO_PI
+			local dir = vmath.vector3(math.cos(angle), math.sin(angle), 0)
+			ray.start_position = dir * -ray_area_radius
+			ray.end_position = dir * ray_area_radius
+		else
+			ray.start_position = random_point_in_radius(dense_center_extent)
+			ray.end_position = random_point_in_radius(dense_center_extent)
+		end
+
+		rays[i] = ray
+	end
+end
+
+local function get_hit_marker(index)
+	local marker = hit_markers[index]
+	if marker then
+		return marker
+	end
+
+	local instance = factory.create("/query_factory#query_go", vmath.vector3(0, 0, 0.25))
+	local sprite_url = msg.url(instance)
+	sprite_url.fragment = "sprite"
+
+	set_tint(sprite_url, COLOR_HIDDEN)
+
+	marker = {
+		instance   = instance,
+		sprite_url = sprite_url,
+	}
+
+	hit_markers[index] = marker
+	hit_marker_count = index
+
+	return marker
+end
+
+local function add_hit_marker(position, first_hit)
+	if visible_hit_marker_count >= HIT_MARKER_CAP then
+		return
+	end
+
+	visible_hit_marker_count = visible_hit_marker_count + 1
+
+	position.z = first_hit and 0.25 or 0.2
+
+	local marker = get_hit_marker(visible_hit_marker_count)
+	set_circle_size(marker.sprite_url, first_hit and 13 or 7)
+	set_tint(marker.sprite_url, first_hit and COLOR_FIRST_HIT or COLOR_LATER_HIT)
+	go.set_position(position, marker.instance)
+end
+
+local function hide_unused_hit_markers(previous_visible_count)
+	for i = visible_hit_marker_count + 1, previous_visible_count do
+		local marker = hit_markers[i]
+		if marker then
+			set_tint(marker.sprite_url, COLOR_HIDDEN)
+		end
+	end
+end
+
+local function add_next_highlight(temp_agent)
+	if not temp_agent.next_raycast_hit then
+		temp_agent.next_raycast_hit = true
+		next_highlight_count = next_highlight_count + 1
+		next_highlighted_agents[next_highlight_count] = temp_agent
+	end
+end
+
+local function apply_highlights()
+	for i = 1, highlighted_count do
+		local temp_agent = highlighted_agents[i]
+		if not temp_agent.next_raycast_hit then
+			temp_agent.raycast_hit = false
+			set_tint(temp_agent.sprite_url, COLOR_AGENT_BASE)
+		end
+
+		highlighted_agents[i] = nil
+	end
+
+	for i = 1, next_highlight_count do
+		local temp_agent = next_highlighted_agents[i]
+		if not temp_agent.raycast_hit then
+			temp_agent.raycast_hit = true
+			set_tint(temp_agent.sprite_url, COLOR_AGENT_HIT)
+		end
+
+		temp_agent.next_raycast_hit = false
+		highlighted_agents[i] = temp_agent
+		next_highlighted_agents[i] = nil
+	end
+
+	highlighted_count = next_highlight_count
+	next_highlight_count = 0
+end
+
+local function run_raycasts()
+	for i = 1, highlighted_count do
+		highlighted_agents[i].next_raycast_hit = false
+	end
+
+	local previous_visible_count = visible_hit_marker_count
+	visible_hit_marker_count = 0
+
+	for r = 1, RAY_COUNT do
+		local ray = rays[r]
+		local hits, count = crowd.raycast_agents(
+			ray.start_position.x,
+			ray.start_position.y,
+			ray.end_position.x,
+			ray.end_position.y,
+			RAY_RADIUS
+		)
+
+		ray.count = count
+		ray.hit = count > 0
+
+		local delta = ray.end_position - ray.start_position
+		for h = 1, count do
+			local hit = hits[h]
+			local temp_agent = data.agent_by_id[hit.id]
+			if temp_agent then
+				add_next_highlight(temp_agent)
+			end
+
+			add_hit_marker(ray.start_position + delta * hit.t, h == 1)
+		end
+	end
+
+	hide_unused_hit_markers(previous_visible_count)
+	apply_highlights()
+end
+
+local function draw_rays()
+	for i = 1, RAY_COUNT do
+		local ray = rays[i]
+		msg.post("@render:", "draw_line", {
+			start_point = ray.start_position,
+			end_point   = ray.end_position,
+			color       = ray.hit and COLOR_RAY_HIT or COLOR_RAY_MISS,
+		})
+	end
+end
+
+function init(self)
+	msg.post("@render:", "clear_color", { color = vmath.vector4(67 / 255, 49 / 255, 67 / 255, 0) })
+	msg.post(".", "acquire_input_focus")
+
+	rays                     = {}
+	hit_markers              = {}
+	hit_marker_count         = 0
+	visible_hit_marker_count = 0
+	highlighted_agents       = {}
+	next_highlighted_agents  = {}
+	highlighted_count        = 0
+	next_highlight_count     = 0
+
+	crowd.init(MAX_AGENTS, 4, 0, 0, MAX_WORKERS)
+	crowd.set_max_raycast_query(RAY_RESULT_CAP)
+
+	if RUN_SIMULATION then
+		crowd.init_gameobjects()
+	end
+
+	crowd.run_simulation(RUN_SIMULATION)
+
+	if MAX_WORKERS > 1 then
+		step_update = crowd.do_step_parallel
+	end
+
+	agent.add(MAX_AGENTS, nil, nil, RUN_SIMULATION, nil, false, {
+		layout = "opposite_circle",
+		radius = FORM_RADIUS
+	})
+
+	generate_rays()
+end
+
+function final(self)
+	for i = 1, hit_marker_count do
+		local marker = hit_markers[i]
+		if marker then
+			go.delete(marker.instance)
+		end
+	end
+
+	crowd.destroy()
+end
+
+function update(self, dt)
+	if data.agent_count == 0 then
+		return
+	end
+
+	if not RUN_SIMULATION then
+		crowd.set_time_step(dt)
+
+		agent.set_preferred_velocities(dt)
+
+		step_update()
+	end
+
+	run_raycasts()
+
+	if not RUN_SIMULATION then
+		agent.update_game_objects()
+	end
+
+	draw_rays()
+end
+
+function on_input(self, action_id, action)
+	cam.input(action_id)
+
+	if action_id == const.TRIGGER.KEY_SPACE and action.pressed then
+		generate_rays()
+	end
+end

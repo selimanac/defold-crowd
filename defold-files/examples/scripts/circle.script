@@ -1,0 +1,56 @@
+local data           = require("defold-files.examples.scripts.lib.data")
+local cam            = require("defold-files.examples.scripts.lib.cam")
+local const          = require("defold-files.examples.scripts.lib.const")
+local agent          = require("defold-files.examples.scripts.lib.agent")
+
+local MAX_AGENTS     = 2000
+local RUN_SIMULATION = true -- toggle run C/C++ or Lua -> false = lua
+local MAX_WORKERS    = 3
+
+local FORM_RADIUS    = 4400
+
+local step_update    = crowd.do_step
+
+function init(self)
+	msg.post("@render:", "clear_color", { color = vmath.vector4(67 / 255, 49 / 255, 67 / 255, 0) })
+	msg.post(".", "acquire_input_focus")
+
+	crowd.init(MAX_AGENTS, 4, 0, 0, MAX_WORKERS)
+
+	if RUN_SIMULATION then
+		crowd.init_gameobjects()
+	end
+
+	crowd.run_simulation(RUN_SIMULATION)
+
+	if MAX_WORKERS > 1 then
+		step_update = crowd.do_step_parallel
+	end
+
+	agent.add(MAX_AGENTS, nil, nil, RUN_SIMULATION, nil, false, {
+		layout = "opposite_circle",
+		radius = FORM_RADIUS
+	})
+end
+
+function final(self)
+	crowd.destroy()
+end
+
+function update(self, dt)
+	if RUN_SIMULATION or data.agent_count == 0 then
+		return
+	end
+
+	crowd.set_time_step(dt)
+
+	agent.set_preferred_velocities(dt)
+
+	step_update()
+
+	agent.update_game_objects()
+end
+
+function on_input(self, action_id, action)
+	cam.input(action_id)
+end

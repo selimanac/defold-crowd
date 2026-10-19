@@ -1,0 +1,29 @@
+[bootstrap]
+main_collection = /defold-files/examples/basic.collectionc
+
+[script]
+shared_state = 1
+
+[display]
+width = 1920
+height = 1080
+
+[project]
+title = Defold Crowd Standart
+version = 0.9
+dependencies#0 = https://github.com/selimanac/defold-random/archive/refs/heads/master.zip
+
+[library]
+include_dirs = crowd
+
+[input]
+game_binding = /builtins/input/all.input_bindingc
+use_accelerometer = 0
+gamepads = /builtins/input/default.gamepadsc
+
+[sprite]
+max_count = 5000
+
+[collection]
+max_instances = 5000
+

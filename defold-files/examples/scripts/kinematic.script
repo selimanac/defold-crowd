@@ -1,0 +1,138 @@
+local data                     = require("defold-files.examples.scripts.lib.data")
+local cam                      = require("defold-files.examples.scripts.lib.cam")
+local const                    = require("defold-files.examples.scripts.lib.const")
+local agent                    = require("defold-files.examples.scripts.lib.agent")
+
+local MAX_AGENTS               = 401 -- +1 for player
+local MAX_NEIGHBORS            = 4
+local MAX_WORKERS              = 1
+
+local PLAYER_RADIUS            = 64
+local PLAYER_MAX_SPEED         = 5400
+local PLAYER_NEIGHBOR_DISTANCE = PLAYER_MAX_SPEED * 3 + PLAYER_RADIUS * 2
+local PLAYER_URL               = "/player"
+
+local MASK_PLAYER              = 2 ^ 0 -- bit 0 = 1
+local MASK_ENEMY               = 2 ^ 1 -- bit 1 = 2
+
+--local data.player.position          = vmath.vector3()
+local player_id                = crowd.INVALID_ID
+
+local step_update              = crowd.do_step
+
+local function resolve_overlap(dt)
+	local ids                         = data.batch_ids
+	local xs                          = data.batch_xs
+	local ys                          = data.batch_ys
+	local vxs                         = data.batch_vxs
+	local vys                         = data.batch_vys
+	local query_radius                = const.PLAYER_RADIUS + data.max_agent_radius + const.PLAYER_SOLID_MARGIN + data.max_agent_speed * dt
+	local nearby_ids, candidate_count = crowd.query_agents_in_radius(data.player.position.x, data.player.position.y, query_radius, MASK_ENEMY)
+
+	if candidate_count == 0 then
+		return
+	end
+
+	for i = 1, candidate_count do
+		local agent_id = nearby_ids[i]
+		ids[i] = nearby_ids[i]
+	end
+
+	crowd.get_agent_positions(ids, candidate_count, xs, ys)
+
+	local overlap_count = 0
+
+	for i = 1, candidate_count do
+		local temp_agent                             = data.agent_by_id[ids[i]]
+		temp_agent.position.x, temp_agent.position.y = xs[i], ys[i]
+
+		local dx                                     = temp_agent.position.x - data.player.position.x
+		local dy                                     = temp_agent.position.y - data.player.position.y
+		local dist_sq                                = dx * dx + dy * dy
+		local min_dist                               = const.PLAYER_RADIUS + temp_agent.radius + const.PLAYER_SOLID_MARGIN
+
+		if dist_sq < min_dist * min_dist then
+			local nx = 1
+			local ny = 0
+
+			if dist_sq > 0.0001 then
+				local inv_dist = 1 / math.sqrt(dist_sq)
+				nx = dx * inv_dist
+				ny = dy * inv_dist
+			end
+
+			temp_agent.position.x = data.player.position.x + nx * min_dist
+			temp_agent.position.y = data.player.position.y + ny * min_dist
+			temp_agent.position.z = 0
+
+			temp_agent.velocity.x = 0
+			temp_agent.velocity.y = 0
+			temp_agent.velocity.z = 0
+
+			-- Compact in place: overlap_count never exceeds i, so xs[i]/ys[i] are already
+			-- consumed above before this slot is overwritten.
+			overlap_count         = overlap_count + 1
+			ids[overlap_count]    = temp_agent.id
+			xs[overlap_count]     = temp_agent.position.x
+			ys[overlap_count]     = temp_agent.position.y
+			vxs[overlap_count]    = 0
+			vys[overlap_count]    = 0
+		end
+	end
+
+	if overlap_count > 0 then
+		crowd.set_agent_positions_and_velocities(ids, xs, ys, vxs, vys, overlap_count)
+	end
+end
+
+function init(self)
+	msg.post("@render:", "clear_color", { color = vmath.vector4(67 / 255, 49 / 255, 67 / 255, 0) })
+	msg.post(".", "acquire_input_focus")
+
+	crowd.init(MAX_AGENTS, MAX_NEIGHBORS, 0, 0, MAX_WORKERS)
+
+	if MAX_WORKERS > 1 then
+		step_update = crowd.do_step_parallel
+	end
+
+	agent.add(200, go.get_position("/blue_1"), go.get_position("/red_1"), false, MASK_ENEMY)
+	agent.add(200, go.get_position("/red_1"), go.get_position("/blue_1"), false, MASK_ENEMY)
+
+	data.player.position = go.get_position(PLAYER_URL)
+
+	go.animate(PLAYER_URL, "position.y", go.PLAYBACK_LOOP_PINGPONG, -data.player.position.y, go.EASING_INOUTSINE, 10)
+
+	player_id = crowd.add_agent(data.player.position.x, data.player.position.y, PLAYER_RADIUS, PLAYER_MAX_SPEED, MAX_NEIGHBORS, PLAYER_NEIGHBOR_DISTANCE, 1.0, 1.0)
+
+	if player_id == crowd.INVALID_ID then
+		error("failed to add player agent", 2)
+	end
+
+	crowd.set_agent_nav_mask(player_id, MASK_PLAYER)
+
+	crowd.set_agent_kinematic(player_id, true)
+end
+
+function final(self)
+	crowd.destroy()
+end
+
+function update(self, dt)
+	data.player.position = go.get_position(PLAYER_URL)
+
+	crowd.set_agent_position(player_id, data.player.position.x, data.player.position.y)
+
+	crowd.set_time_step(dt)
+
+	agent.set_preferred_velocities(dt)
+
+	step_update()
+
+	resolve_overlap(dt)
+
+	agent.update_game_objects()
+end
+
+function on_input(self, action_id, action)
+	cam.input(action_id)
+end

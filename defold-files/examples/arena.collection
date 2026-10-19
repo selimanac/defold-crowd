@@ -1,0 +1,228 @@
+name: "main"
+instances {
+  id: "goal_1"
+  prototype: "/defold-files/examples/gameobject/goal_128.go"
+  position {
+    x: 1523.4895
+    y: 1032.4718
+  }
+}
+instances {
+  id: "agent_factory"
+  prototype: "/defold-files/examples/gameobject/agent_factory.go"
+}
+instances {
+  id: "goal_6"
+  prototype: "/defold-files/examples/gameobject/goal_128.go"
+  position {
+    x: 2077.2698
+    y: 122.019424
+  }
+}
+instances {
+  id: "goal_2"
+  prototype: "/defold-files/examples/gameobject/goal_128.go"
+  position {
+    x: 1898.9338
+    y: -581.9386
+  }
+}
+instances {
+  id: "goal_3"
+  prototype: "/defold-files/examples/gameobject/goal_128.go"
+  position {
+    x: -532.06793
+    y: -985.5412
+  }
+}
+instances {
+  id: "goal_4"
+  prototype: "/defold-files/examples/gameobject/goal_128.go"
+  position {
+    x: -1799.1924
+    y: -1079.4022
+  }
+}
+instances {
+  id: "goal_5"
+  prototype: "/defold-files/examples/gameobject/goal_128.go"
+  position {
+    x: -2024.459
+    y: 994.92737
+  }
+}
+scale_along_z: 0
+embedded_instances {
+  id: "camera"
+  data: "embedded_components {\n"
+  "  id: \"camera\"\n"
+  "  type: \"camera\"\n"
+  "  data: \"aspect_ratio: 1.0\\n"
+  "fov: 0.7854\\n"
+  "near_z: -1.0\\n"
+  "far_z: 1.0\\n"
+  "auto_aspect_ratio: 1\\n"
+  "orthographic_projection: 1\\n"
+  "orthographic_zoom: 0.25\\n"
+  "\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "goals"
+  children: "goal_1"
+  children: "goal_2"
+  children: "goal_3"
+  children: "goal_4"
+  children: "goal_5"
+  children: "goal_6"
+  data: ""
+}
+embedded_instances {
+  id: "scripts"
+  children: "agent_factory"
+  data: "components {\n"
+  "  id: \"basic\"\n"
+  "  component: \"/defold-files/examples/scripts/arena.script\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "obst"
+  children: "arena"
+  children: "dia"
+  children: "poly"
+  children: "rect"
+  children: "star"
+  children: "tri"
+  data: ""
+}
+embedded_instances {
+  id: "rect"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"rect\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/defold-files/examples/assets/test.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -1181.7131
+    y: 860.8405
+  }
+}
+embedded_instances {
+  id: "arena"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"arena\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/defold-files/examples/assets/test.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    z: -0.1
+  }
+}
+embedded_instances {
+  id: "star"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"star\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 901.0\\n"
+  "  y: 222.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/defold-files/examples/assets/test.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -1376.4025
+    y: 46.95035
+  }
+}
+embedded_instances {
+  id: "poly"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"poly\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 561.0\\n"
+  "  y: 561.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/defold-files/examples/assets/test.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -221.91124
+    y: 290.98914
+  }
+}
+embedded_instances {
+  id: "tri"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"tri\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 561.0\\n"
+  "  y: 561.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/defold-files/examples/assets/test.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 1497.6472
+    y: 80.86244
+  }
+}
+embedded_instances {
+  id: "dia"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"dia\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 488.0\\n"
+  "  y: 488.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/defold-files/examples/assets/test.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: 1244.2223
+    y: -754.5011
+  }
+}

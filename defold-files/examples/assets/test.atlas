@@ -1,0 +1,85 @@
+images {
+  image: "/defold-files/examples/assets/images/agent_32.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/agent_64.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/agent_128.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/agent_256.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/goal_32.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/goal_128.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obs_64.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obs_128.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obs_256.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obs_512.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/player_128.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/player_256.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/target_128.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obs__air_64.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obs_air_128.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obs_air_256.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obs_air_512.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obst_rect_256.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/player_32.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/player_64.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obst/dia.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obst/rect.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obst/star.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obst/tri.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obst/poly.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/obst/arena.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/circle.png"
+}
+images {
+  image: "/defold-files/examples/assets/images/query.png"
+}
+extrude_borders: 2

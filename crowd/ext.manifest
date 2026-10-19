@@ -1,0 +1,6 @@
+# C++ symbol in your extension
+name: "Crowd"
+platforms:
+    common:
+        context:
+            flags: ["-ffast-math"]

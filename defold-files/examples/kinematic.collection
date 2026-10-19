@@ -1,0 +1,57 @@
+name: "main"
+instances {
+  id: "agent_factory"
+  prototype: "/defold-files/examples/gameobject/agent_factory.go"
+}
+instances {
+  id: "red_1"
+  prototype: "/defold-files/examples/gameobject/goal_128.go"
+  position {
+    x: 2800.0
+  }
+}
+instances {
+  id: "blue_1"
+  prototype: "/defold-files/examples/gameobject/target_128.go"
+  position {
+    x: -2800.0
+  }
+}
+instances {
+  id: "player"
+  prototype: "/defold-files/examples/gameobject/player_128.go"
+  position {
+    y: 1600.0
+  }
+}
+scale_along_z: 0
+embedded_instances {
+  id: "camera"
+  data: "embedded_components {\n"
+  "  id: \"camera\"\n"
+  "  type: \"camera\"\n"
+  "  data: \"aspect_ratio: 1.0\\n"
+  "fov: 0.7854\\n"
+  "near_z: -1.0\\n"
+  "far_z: 1.0\\n"
+  "auto_aspect_ratio: 1\\n"
+  "orthographic_projection: 1\\n"
+  "orthographic_zoom: 0.25\\n"
+  "\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "goals"
+  children: "blue_1"
+  children: "red_1"
+  data: ""
+}
+embedded_instances {
+  id: "scripts"
+  data: "components {\n"
+  "  id: \"basic\"\n"
+  "  component: \"/defold-files/examples/scripts/kinematic.script\"\n"
+  "}\n"
+  ""
+}

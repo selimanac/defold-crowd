@@ -1,0 +1,449 @@
+name: "main"
+instances {
+  id: "goal_1"
+  prototype: "/defold-files/examples/gameobject/goal_128.go"
+  position {
+    x: 1900.0
+    y: 900.0
+  }
+}
+instances {
+  id: "goal_2"
+  prototype: "/defold-files/examples/gameobject/goal_128.go"
+  position {
+    x: 1900.0
+    y: 310.0
+  }
+}
+instances {
+  id: "goal_3"
+  prototype: "/defold-files/examples/gameobject/goal_128.go"
+  position {
+    x: 1900.0
+    y: -310.0
+  }
+}
+instances {
+  id: "goal_4"
+  prototype: "/defold-files/examples/gameobject/goal_128.go"
+  position {
+    x: 1900.0
+    y: -900.0
+  }
+}
+instances {
+  id: "goal_5"
+  prototype: "/defold-files/examples/gameobject/goal_128.go"
+  position {
+    x: 1900.0
+    y: -1490.0
+  }
+}
+instances {
+  id: "player_1"
+  prototype: "/defold-files/examples/gameobject/player_128.go"
+  position {
+    x: -1900.0
+    y: 900.0
+  }
+}
+instances {
+  id: "player_2"
+  prototype: "/defold-files/examples/gameobject/player_128.go"
+  position {
+    x: -1900.0
+    y: 310.0
+  }
+}
+instances {
+  id: "player_3"
+  prototype: "/defold-files/examples/gameobject/player_128.go"
+  position {
+    x: -1900.0
+    y: -310.0
+  }
+}
+instances {
+  id: "player_4"
+  prototype: "/defold-files/examples/gameobject/player_128.go"
+  position {
+    x: -1900.0
+    y: -900.0
+  }
+}
+instances {
+  id: "player_5"
+  prototype: "/defold-files/examples/gameobject/player_128.go"
+  position {
+    x: -1900.0
+    y: -1490.0
+  }
+}
+instances {
+  id: "agent_2"
+  prototype: "/defold-files/examples/gameobject/agent_128.go"
+  position {
+    x: 1900.0
+    y: 310.0
+  }
+  rotation {
+    z: 1.0
+    w: 6.123234E-17
+  }
+}
+instances {
+  id: "agent_1"
+  prototype: "/defold-files/examples/gameobject/agent_128.go"
+  position {
+    x: 1900.0
+    y: 900.0
+  }
+  rotation {
+    z: 1.0
+    w: 6.123234E-17
+  }
+}
+instances {
+  id: "agent_3"
+  prototype: "/defold-files/examples/gameobject/agent_128.go"
+  position {
+    x: 1900.0
+    y: -310.0
+  }
+  rotation {
+    z: 1.0
+    w: 6.123234E-17
+  }
+}
+instances {
+  id: "agent_4"
+  prototype: "/defold-files/examples/gameobject/agent_128.go"
+  position {
+    x: 1900.0
+    y: -900.0
+  }
+  rotation {
+    z: 1.0
+    w: 6.123234E-17
+  }
+}
+instances {
+  id: "agent_5"
+  prototype: "/defold-files/examples/gameobject/agent_128.go"
+  position {
+    x: 1900.0
+    y: -1490.0
+  }
+  rotation {
+    z: 1.0
+    w: 6.123234E-17
+  }
+}
+scale_along_z: 0
+embedded_instances {
+  id: "scripts"
+  data: "components {\n"
+  "  id: \"example\"\n"
+  "  component: \"/defold-files/examples/scripts/weight_priority.script\"\n"
+  "}\n"
+  ""
+}
+embedded_instances {
+  id: "camera"
+  data: "embedded_components {\n"
+  "  id: \"camera\"\n"
+  "  type: \"camera\"\n"
+  "  data: \"aspect_ratio: 1.0\\n"
+  "fov: 0.7854\\n"
+  "near_z: -1.0\\n"
+  "far_z: 1.0\\n"
+  "orthographic_projection: 1\\n"
+  "orthographic_zoom: 0.35\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    y: -229.73647
+  }
+}
+embedded_instances {
+  id: "goals"
+  children: "goal_1"
+  children: "goal_2"
+  children: "goal_3"
+  children: "goal_4"
+  children: "goal_5"
+  data: ""
+}
+embedded_instances {
+  id: "start"
+  children: "start_1"
+  children: "start_2"
+  children: "start_3"
+  children: "start_4"
+  children: "start_5"
+  data: ""
+}
+embedded_instances {
+  id: "start_1"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"target_128\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/defold-files/examples/assets/test.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -1900.0
+    y: 900.0
+  }
+}
+embedded_instances {
+  id: "start_2"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"target_128\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 175.0\\n"
+  "  y: 176.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/defold-files/examples/assets/test.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -1900.0
+    y: 310.0
+  }
+}
+embedded_instances {
+  id: "start_3"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"target_128\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 175.0\\n"
+  "  y: 176.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/defold-files/examples/assets/test.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -1900.0
+    y: -310.0
+  }
+}
+embedded_instances {
+  id: "start_4"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"target_128\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 175.0\\n"
+  "  y: 176.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/defold-files/examples/assets/test.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -1900.0
+    y: -900.0
+  }
+}
+embedded_instances {
+  id: "start_5"
+  data: "embedded_components {\n"
+  "  id: \"sprite\"\n"
+  "  type: \"sprite\"\n"
+  "  data: \"default_animation: \\\"target_128\\\"\\n"
+  "material: \\\"/builtins/materials/sprite.material\\\"\\n"
+  "size {\\n"
+  "  x: 175.0\\n"
+  "  y: 176.0\\n"
+  "}\\n"
+  "textures {\\n"
+  "  sampler: \\\"texture_sampler\\\"\\n"
+  "  texture: \\\"/defold-files/examples/assets/test.atlas\\\"\\n"
+  "}\\n"
+  "\"\n"
+  "}\n"
+  ""
+  position {
+    x: -1900.0
+    y: -1490.0
+  }
+}
+embedded_instances {
+  id: "players"
+  children: "player_1"
+  children: "player_2"
+  children: "player_3"
+  children: "player_4"
+  children: "player_5"
+  data: ""
+  position {
+    z: 0.1
+  }
+}
+embedded_instances {
+  id: "enemies"
+  children: "agent_1"
+  children: "agent_2"
+  children: "agent_3"
+  children: "agent_4"
+  children: "agent_5"
+  data: ""
+  position {
+    z: 0.1
+  }
+}
+embedded_instances {
+  id: "labels"
+  data: "embedded_components {\n"
+  "  id: \"EQUAL\"\n"
+  "  type: \"label\"\n"
+  "  data: \"size {\\n"
+  "  x: 128.0\\n"
+  "  y: 32.0\\n"
+  "}\\n"
+  "pivot: PIVOT_W\\n"
+  "text: \\\"EQUAL (ORCA) 50/50\\\"\\n"
+  "font: \\\"/builtins/fonts/default.font\\\"\\n"
+  "material: \\\"/builtins/fonts/label-df.material\\\"\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: -2034.1274\n"
+  "    y: 1128.906\n"
+  "  }\n"
+  "  scale {\n"
+  "    x: 5.0\n"
+  "    y: 5.0\n"
+  "    z: 5.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"WEIGHT\"\n"
+  "  type: \"label\"\n"
+  "  data: \"size {\\n"
+  "  x: 128.0\\n"
+  "  y: 71.0\\n"
+  "}\\n"
+  "pivot: PIVOT_W\\n"
+  "text: \\\"WEIGHT\\\\n"
+  "\\\"\\n"
+  "  \\\"Blue: 16\\\\n"
+  "\\\"\\n"
+  "  \\\"Pink: 1\\\"\\n"
+  "font: \\\"/builtins/fonts/default.font\\\"\\n"
+  "material: \\\"/builtins/fonts/label-df.material\\\"\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: -2034.1274\n"
+  "    y: 542.0984\n"
+  "  }\n"
+  "  scale {\n"
+  "    x: 5.0\n"
+  "    y: 5.0\n"
+  "    z: 5.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"PRIORITY\"\n"
+  "  type: \"label\"\n"
+  "  data: \"size {\\n"
+  "  x: 128.0\\n"
+  "  y: 32.0\\n"
+  "}\\n"
+  "pivot: PIVOT_W\\n"
+  "text: \\\"PRIORITY\\\\n"
+  "\\\"\\n"
+  "  \\\"Blue Weight: 1, Priority: 10\\\\n"
+  "\\\"\\n"
+  "  \\\"Pink Weight: 1, Priority: 0\\\"\\n"
+  "font: \\\"/builtins/fonts/default.font\\\"\\n"
+  "material: \\\"/builtins/fonts/label-df.material\\\"\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: -2034.1274\n"
+  "    y: -78.24105\n"
+  "  }\n"
+  "  scale {\n"
+  "    x: 5.0\n"
+  "    y: 5.0\n"
+  "    z: 5.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"SATURATED\"\n"
+  "  type: \"label\"\n"
+  "  data: \"size {\\n"
+  "  x: 128.0\\n"
+  "  y: 32.0\\n"
+  "}\\n"
+  "pivot: PIVOT_W\\n"
+  "text: \\\"SATURATED\\\\n"
+  "\\\"\\n"
+  "  \\\"Blue Weight: 120, Priority: 120\\\\n"
+  "\\\"\\n"
+  "  \\\"Pink Weight: 1, Priority: 0\\\"\\n"
+  "font: \\\"/builtins/fonts/default.font\\\"\\n"
+  "material: \\\"/builtins/fonts/label-df.material\\\"\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: -2034.1274\n"
+  "    y: -676.22595\n"
+  "  }\n"
+  "  scale {\n"
+  "    x: 5.0\n"
+  "    y: 5.0\n"
+  "    z: 5.0\n"
+  "  }\n"
+  "}\n"
+  "embedded_components {\n"
+  "  id: \"LOCKED\"\n"
+  "  type: \"label\"\n"
+  "  data: \"size {\\n"
+  "  x: 128.0\\n"
+  "  y: 71.0\\n"
+  "}\\n"
+  "pivot: PIVOT_W\\n"
+  "text: \\\"LOCKED\\\\n"
+  "\\\"\\n"
+  "  \\\"Blue moves, Pink locks at 30%\\\"\\n"
+  "font: \\\"/builtins/fonts/default.font\\\"\\n"
+  "material: \\\"/builtins/fonts/label-df.material\\\"\\n"
+  "\"\n"
+  "  position {\n"
+  "    x: -2034.1274\n"
+  "    y: -1266.0\n"
+  "  }\n"
+  "  scale {\n"
+  "    x: 5.0\n"
+  "    y: 5.0\n"
+  "    z: 5.0\n"
+  "  }\n"
+  "}\n"
+  ""
+}
