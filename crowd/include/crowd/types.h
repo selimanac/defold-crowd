@@ -66,7 +66,8 @@ namespace crowd
 
     struct AgentTreeNode
     {
-        uint16_t begin, end, left, right;
+        uint32_t right; // node index, up to 2 * max_agents. The left child is always this node + 1
+        uint16_t begin, end;
         float    min_x, max_x, min_y, max_y;
     };
 
